@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maverick's Space Explorer</title>
+    <link rel="icon" href="./m-icon.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="stars"></div>
+    <div class="twinkling"></div>
+    
+    <div class="container-fluid space-dashboard">
+        <header class="space-header">
+            <h1 id="siteTitle"><i class="fas fa-rocket"></i> Maverick's Space Explorer</h1>
+            <div class="user-controls">
+                <button id="loginBtn" class="btn btn-space">Admin Login</button>
+                <button id="logoutBtn" class="btn btn-space" style="display:none;">Logout</button>
+                <button id="editSiteBtn" class="btn btn-space edit-control" style="display:none;">
+                    <i class="fas fa-cog"></i> Edit Site
+                </button>
+                <div id="userInfo" class="user-info"></div>
+            </div>
+        </header>
+
+        <div class="row">
+            <!-- Left Sidebar -->
+            <div class="col-md-3 sidebar">
+                <div class="space-widget astronaut-profile">
+                    <div class="widget-header">
+                        <h3><i class="fas fa-user-astronaut"></i> Space Profile</h3>
+                        <button class="btn btn-sm btn-space edit-control" id="editProfileBtn" style="display:none;">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </div>
+                    <div id="profileContent">
+                        <img id="profileImage" src="https://cdn-icons-png.flaticon.com/512/1864/1864593.png" alt="Astronaut" class="profile-img">
+                        <h4 id="profileName">Maverick the Astronaut</h4>
+                        <p id="profileMission">Mission: Explore the galaxy!</p>
+                    </div>
+                </div>
+
+                <div class="space-widget mission-control">
+                    <h3><i class="fas fa-satellite"></i> Quick Controls</h3>
+                    <div class="edit-control" style="display:none;">
+                        <button id="addPostBtn" class="btn btn-space"><i class="fas fa-plus"></i> Add Space Post</button>
+                        <button id="changeThemeBtn" class="btn btn-space"><i class="fas fa-palette"></i> Change Theme</button>
+                    </div>
+                    <button id="viewGalleryBtn" class="btn btn-space"><i class="fas fa-images"></i> View Gallery</button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-6 main-content">
+                <div class="space-widget mission-board">
+                    <div class="widget-header">
+                        <h3><i class="fas fa-clipboard-list"></i> Mission Board</h3>
+                        <button class="btn btn-sm btn-space edit-control" id="addPostBtn2" style="display:none;">
+                            <i class="fas fa-plus"></i> Add Post
+                        </button>
+                    </div>
+                    <div id="missionPosts" class="posts-container">
+                        <!-- Posts will be added here dynamically -->
+                        <div class="text-center">
+                            <div class="spinner-border text-primary"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar -->
+            <div class="col-md-3 sidebar">
+                <div class="space-widget space-facts">
+                    <div class="widget-header">
+                        <h3><i class="fas fa-star"></i> Did You Know?</h3>
+                        <button class="btn btn-sm btn-space edit-control" id="addFactBtn" style="display:none;">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div id="spaceFacts">
+                        <!-- Facts will be added here dynamically -->
+                        <div class="text-center">
+                            <div class="spinner-border text-primary"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-widget space-gallery">
+                    <div class="widget-header">
+                        <h3><i class="fas fa-camera"></i> Space Gallery</h3>
+                        <button class="btn btn-sm btn-space edit-control" id="uploadImageBtn" style="display:none;">
+                            <i class="fas fa-upload"></i>
+                        </button>
+                    </div>
+                    <div id="imageGallery" class="gallery-container">
+                        <!-- Images will be added here dynamically -->
+                        <div class="text-center">
+                            <div class="spinner-border text-primary"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="loginModal" class="modal fade space-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Admin Login</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="loginEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="loginEmail" placeholder="your-email@example.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="loginPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="loginPassword" placeholder="Password">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-space" id="confirmLoginBtn">Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="editSiteModal" class="modal fade space-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Site Settings</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="siteTitleInput" class="form-label">Site Title</label>
+                        <input type="text" class="form-control" id="siteTitleInput" placeholder="Maverick's Space Explorer">
+                    </div>
+                    <div class="mb-3">
+                        <label for="siteIconSelect" class="form-label">Site Icon</label>
+                        <select class="form-select" id="siteIconSelect">
+                            <option value="rocket">Rocket</option>
+                            <option value="star">Star</option>
+                            <option value="moon">Moon</option>
+                            <option value="robot">Robot</option>
+                            <option value="dragon">Dragon</option>
+                            <option value="gamepad">Gamepad</option>
+                            <option value="dog">Dog</option>
+                            <option value="cat">Cat</option>
+                            <option value="car">Car</option>
+                            <option value="football">Football</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-space" id="saveSiteSettingsBtn">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="editProfileModal" class="modal fade space-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Your Space Profile</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="profileNameInput" class="form-label">Astronaut Name</label>
+                        <input type="text" class="form-control" id="profileNameInput" value="Maverick the Astronaut">
+                    </div>
+                    <div class="mb-3">
+                        <label for="profileMissionInput" class="form-label">Your Mission</label>
+                        <input type="text" class="form-control" id="profileMissionInput" value="Mission: Explore the galaxy!">
+                    </div>
+                    <div class="mb-3">
+                        <label for="profileImageUpload" class="form-label">Upload Profile Image</label>
+                        <input type="file" class="form-control" id="profileImageUpload" accept="image/*">
+                    </div>
+                    <div class="mb-3">
+                        <label for="profileColorInput" class="form-label">Choose Your Color</label>
+                        <input type="color" class="form-control form-control-color" id="profileColorInput" value="#4d79ff">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-space" id="saveProfileBtn">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="addPostModal" class="modal fade space-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Space Post</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="postTitleInput" class="form-label">Post Title</label>
+                        <input type="text" class="form-control" id="postTitleInput" placeholder="My Space Discovery">
+                    </div>
+                    <div class="mb-3">
+                        <label for="postContentInput" class="form-label">Post Content</label>
+                        <textarea class="form-control" id="postContentInput" rows="3" placeholder="Today I learned about..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="postImageUpload" class="form-label">Upload Image (Optional)</label>
+                        <input type="file" class="form-control" id="postImageUpload" accept="image/*">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-space" id="savePostBtn">Post to Mission Board</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="addFactModal" class="modal fade space-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Your Space Fact</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="factInput" class="form-label">Your Amazing Space Fact</label>
+                        <textarea class="form-control" id="factInput" rows="3" placeholder="Did you know..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-space" id="saveFactBtn">Add Fact</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="uploadImageModal" class="modal fade space-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload Space Image</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="galleryImageUpload" class="form-label">Choose an image</label>
+                        <input type="file" class="form-control" id="galleryImageUpload" accept="image/*">
+                    </div>
+                    <div class="mb-3">
+                        <label for="imageCaptionInput" class="form-label">Image Caption</label>
+                        <input type="text" class="form-control" id="imageCaptionInput" placeholder="My space drawing">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-space" id="saveImageBtn">Upload to Gallery</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="themeModal" class="modal fade space-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-palette"></i> Choose Your Space Theme</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row theme-options">
+                        <div class="col-md-4 theme-option" data-theme="default">
+                            <div class="theme-preview default-theme"></div>
+                            <p>Deep Space</p>
+                        </div>
+                        <div class="col-md-4 theme-option" data-theme="mars">
+                            <div class="theme-preview mars-theme"></div>
+                            <p>Mars Explorer</p>
+                        </div>
+                        <div class="col-md-4 theme-option" data-theme="nebula">
+                            <div class="theme-preview nebula-theme"></div>
+                            <p>Nebula Dream</p>
+                        </div>
+                        <div class="col-md-4 theme-option" data-theme="alien">
+                            <div class="theme-preview alien-theme"></div>
+                            <p>Alien Green</p>
+                        </div>
+                        <div class="col-md-4 theme-option" data-theme="sun">
+                            <div class="theme-preview sun-theme"></div>
+                            <p>Solar Flare</p>
+                        </div>
+                        <div class="col-md-4 theme-option" data-theme="custom">
+                            <div class="theme-preview custom-theme"></div>
+                            <p>Custom Color</p>
+                            <input type="color" id="customThemeColor" value="#4d79ff">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-space" id="saveThemeBtn">Apply Theme</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="modal fade space-modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCaption">Space Image</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="modalImage" src="" class="img-fluid" alt="Space Image">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-space" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase and other JS -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-storage-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="script.js"></script>
+</body>
+</html>
